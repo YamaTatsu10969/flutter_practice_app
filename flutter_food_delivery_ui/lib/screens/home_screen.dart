@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_food_delivery_ui/screens/restaurant_screen.dart';
+import 'package:flutter_food_delivery_ui/widgets/rating_stars.dart';
 import 'package:flutter_food_delivery_ui/widgets/recent_orders.dart';
 
 import '../data/data.dart';
+import '../models/restaurant.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,6 +13,91 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  _buildRestaurants() {
+    List<Widget> restaurantList = [];
+    restaurants.forEach((Restaurant restaurant) {
+      restaurantList.add(
+        GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => RestaurantScreen(restaurant: restaurant),
+            ),
+          ),
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                width: 1,
+                color: Colors.grey[200],
+              ),
+            ),
+            child: Row(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Hero(
+                    tag: restaurant.imageUrl,
+                    child: Image(
+                      height: 150,
+                      width: 150,
+                      image: AssetImage(restaurant.imageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          restaurant.name,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        RatingStars(restaurant.rating),
+                        Text(
+                          restaurant.address,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          '0.2 miles away',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: restaurantList),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +153,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           RecentOrders(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Nearby Restaurants',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+              _buildRestaurants(),
+            ],
+          )
         ],
       ),
     );

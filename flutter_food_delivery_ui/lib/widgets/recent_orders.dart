@@ -6,7 +6,7 @@ import '../models/order.dart';
 class RecentOrders extends StatelessWidget {
   _buildRecentOrder(BuildContext context, Order order) {
     return Container(
-      margin: EdgeInsets.all(10.0),
+      margin: EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
       width: 320,
       decoration: BoxDecoration(
         color: Colors.white,
